@@ -4,19 +4,19 @@ let videoDome;
 let photoDome;
 
 export function initDomes(data, scene) {
-  let label = addTextLabel(data);
+  let label = data[getIndex()].text ? addTextLabel(data) : "";
 
   if (data[getIndex()].type === "photo") {
     photoDome = new BABYLON.PhotoDome(
       "photodome",
-      "./images/" + data[getIndex()].url,
+      "../assets/" + data[getIndex()].filename,
       {},
       scene
     );
   } else {
     videoDome = new BABYLON.VideoDome(
       "videodome",
-      "./videos/" + data[getIndex()].url,
+      "../assets/" + data[getIndex()].filename,
       {},
       scene
     );

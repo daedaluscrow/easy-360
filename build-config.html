@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Build Tour Configuration</title>
+</head>
+<script>
+    let data = {
+        music: false,
+        files: [
+            {
+                filename: "GS__0004.jpg",
+                text: "Library",
+                sound: false,
+                type: "photo",
+            }
+        ]
+    }
+</script>
+<body>
+    <main>
+        <div id="form-container">
+            <form id="form">
+                <label for="music">Music to play throughout tour (input filename): </label>
+                <input id="music" name="music" type="text" />
+                <fieldset name="files">
+                    <label for="filename">Filename for image or video: </label>
+                    <input id="filename" name="filename" type="text" />
+                    <label for="text">Text you want to appear in scene (leave blank for no text): </label>
+                    <input id="text" name="text" type="text" />
+                    <label for="sound">Sound for this stop, could be voiceover or music just here. Leave blank if this stop is video (input filename): </label>
+                    <input id="sound" name="sound" type="text" />
+                    <label for="type">Type of media this is: </label>
+                    <select name="type" id="type">
+                        <option value="photo">photo</option>
+                        <option value="video">video</option>
+                    </select>
+                </fieldset>
+                <button>Download</button>
+            </form>
+        </div>
+    </main>
+    <a id="downloadAnchorElem" style="display:none"></a>
+</body>
+<script>
+    function handleSubmit(event) {
+        event.preventDefault();
+
+        const data = new FormData(event.target);
+
+        const value = Object.fromEntries(data.entries());
+
+        value.files = data.getAll("files")
+
+        console.log({ value });
+
+        downloadObjectAsJson(value, 'config')
+    }
+
+    const form = document.querySelector('form');
+    form.addEventListener('submit', handleSubmit);
+
+
+  function downloadObjectAsJson(exportObj, exportName){
+    let dataStr = "data:text/javascript;charset=utf-8," + encodeURIComponent("export default " + JSON.stringify(exportObj));
+    let downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", exportName + ".js");
+    document.body.appendChild(downloadAnchorNode); // required for firefox
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+  }
+</script>
+</html>

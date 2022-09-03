@@ -61,7 +61,7 @@ let createScene = async function () {
   // Default intensity is 1. Let's dim the light a small amount
   light.intensity = 0.7;
 
-  let domes = initDomes(config, scene);
+  let domes = initDomes(config.files, scene);
 
   loadAssets(scene);
 

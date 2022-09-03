@@ -7,7 +7,7 @@ export function addTextLabel(data) {
   let advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(plane);
 
   let label = new BABYLON.GUI.TextBlock();
-  label.text = data[getIndex()].title;
+  label.text = data[getIndex()].text;
   label.color = "white";
   label.fontSize = 36;
   advancedTexture.addControl(label);
