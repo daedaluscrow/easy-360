@@ -1,0 +1,1 @@
+export default {"music":"background.mp3","files":[{"filename":"GS__0003.jpg","text":"Library","sound":false,"type":"photo"},{"filename":"GS__0155.jpg","text":"Library","sound":"narration.mp3","type":"photo"}]}

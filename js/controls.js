@@ -41,7 +41,7 @@ export function vrControls(xr, scene, domes) {
     controller.onMotionControllerInitObservable.add((motionController) => {
       const xr_ids = motionController.getComponentIds();
       xr_ids.forEach((id) => {
-        let component = motionController.getComponent(id);
+        const component = motionController.getComponent(id);
         switch (component.type) {
           case "trigger":
             if (!trigger) {

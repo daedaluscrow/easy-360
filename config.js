@@ -1,1 +1,0 @@
-export default {"music":false,"files":[{"filename":"GS__0004.jpg","text":"Library","sound":false,"type":"photo"}]}

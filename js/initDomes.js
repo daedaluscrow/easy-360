@@ -4,7 +4,7 @@ let videoDome;
 let photoDome;
 
 export function initDomes(data, scene) {
-  let label = data[getIndex()].text ? addTextLabel(data) : "";
+  const label = data[getIndex()].text ? addTextLabel(data) : "";
 
   if (data[getIndex()].type === "photo") {
     photoDome = new BABYLON.PhotoDome(

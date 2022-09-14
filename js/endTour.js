@@ -6,7 +6,7 @@ export function endTour(domes, scene) {
   document.getElementById("tour").style.display = "none";
   document.getElementById("customLoadingScreenDiv").style.display = "flex";
   document.getElementById("loading-text").innerText = "Tour Completed!";
-  let button = document.getElementById("babylonUnmuteIconBtn");
+  const button = document.getElementById("babylonUnmuteIconBtn");
   button.innerText = "Restart Tour";
   button.addEventListener("click", () => {
     changeDome(0, domes, scene);

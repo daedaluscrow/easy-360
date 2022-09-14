@@ -1,10 +1,10 @@
-import config from "../config.js";
+import config from "../config/config.js";
 import { fadeIn } from "./shader.js";
 import { endTour } from "./endTour.js";
 let index = 0;
 let text = true;
 
-export async function changeDome(direction, domes, scene) {
+export function changeDome(direction, domes, scene) {
   const data = config.files;
   if (domes.videoDome) domes.videoDome.videoTexture.video.pause();
   index = direction === 0 ? direction : Math.max(index + direction, 0);
@@ -55,6 +55,19 @@ export async function changeDome(direction, domes, scene) {
             fadeIn(scene);
           }
         );
+      }
+      if(data[index].sound) {
+        const soundTask = scene.tasks.find(element => element.name === "Sound"+(index+1))
+        console.log(soundTask);
+        const sound = new BABYLON.Sound(
+          "Sound",
+          soundTask.data,
+          scene,
+          null,
+          {loop: true,}
+        )
+        console.log(sound);
+        sound.isPlaying = true;
       }
     }
     domes.label.text = data[index].text;

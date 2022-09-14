@@ -16,7 +16,7 @@ export function createShader(camera) {
       "}"
   );
 
-  var postProcess = new BABYLON.PostProcess(
+  const postProcess = new BABYLON.PostProcess(
     "Fade",
     "fade",
     ["fadeLevel"],
@@ -31,7 +31,7 @@ export function createShader(camera) {
 
 export function fadeIn(scene) {
   let alpha = 0;
-  let inObserver = scene.onBeforeRenderObservable.add(function () {
+  const inObserver = scene.onBeforeRenderObservable.add(function () {
     fadeLevel = alpha;
     alpha += 0.01;
 
@@ -43,7 +43,7 @@ export function fadeIn(scene) {
 
 export function fadeOut(mode, scene, domes) {
   let alpha = 1;
-  let outObserver = scene.onBeforeRenderObservable.add(function () {
+  const outObserver = scene.onBeforeRenderObservable.add(function () {
     fadeLevel = alpha;
     alpha -= 0.01;
 
