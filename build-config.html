@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Build Tour Configuration</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script src="js/bootstrap.bundle.min.js"></script>
 </head>
 <script>
     let data = {
@@ -19,58 +22,152 @@
         ]
     }
 </script>
+
 <body>
-    <main>
-        <div id="form-container">
+    <main style="padding:2rem;">
+        <div class="container-lg text-center">
+            <h1>Configuration File Generator</h1>
+        </div>
+        <div id="form-container" class="container-lg">
             <form id="form">
-                <label for="music">Music to play throughout tour (input filename): </label>
-                <input id="music" name="music" type="text" />
-                <fieldset name="files">
-                    <label for="filename">Filename for image or video: </label>
-                    <input id="filename" name="filename" type="text" />
-                    <label for="text">Text you want to appear in scene (leave blank for no text): </label>
-                    <input id="text" name="text" type="text" />
-                    <label for="sound">Sound for this stop, could be voiceover or music just here. Leave blank if this stop is video (input filename): </label>
-                    <input id="sound" name="sound" type="text" />
-                    <label for="type">Type of media this is: </label>
-                    <select name="type" id="type">
-                        <option value="photo">photo</option>
-                        <option value="video">video</option>
-                    </select>
+                <div class="mb-3">
+                    <label class="form-label" for="music">Tour Music Filename: </label>
+                    <input class="form-control" id="music" name="music" type="text" required />
+                    <div id="musicHelp" class="form-text">If you have music you want to play throughout all the stops,
+                        this is where you input the filename.</div>
+                </div>
+                <fieldset id="files-container" name="files-container" class="container-fluid border mb-3">
+                    <div class="mb-3">
+                        <h2>Stop 1</h2>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="filename">Video or Image Filename: </label>
+                        <input class="form-control" id="filename" name="files[0][filename]" type="text" />
+                        <div id="filenameHelp" class="form-text">The filename of this video or image for this stop of
+                            the
+                            tour. Needs to include the extension (i.e. .jpg or .mp4).</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="text">Scene Text:
+                        </label>
+                        <input class="form-control" id="text" name="files[0][text]" type="text" />
+                        <div id="textHelp" class="form-text">Text you want to appear in scene. Leave blank for no text.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="sound">Sound Filename: </label>
+                        <input class="form-control" id="sound" name="files[0][sound]" type="text" />
+                        <div id="soundHelp" class="form-text">The sound for this stop, could be voiceover or music just
+                            here.
+                            Leave blank if this stop is a video.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="type">Media Type: </label>
+                        <select class="form-select" name="files[0][type]" id="type">
+                            <option value="photo">photo</option>
+                            <option value="video">video</option>
+                        </select>
+                    </div>
                 </fieldset>
-                <button>Download</button>
+
+                <div class="mb-3">
+                    <button id="remove" type="button" name="remove" onclick="removeStop()" class="btn btn-danger float-end rounded-0">Remove Last Stop</button>
+                    <button id="add" type="button" name="add" onclick="addStop()" class="btn btn-dark float-end rounded-0" style="margin-right: 2rem;">Add Another Stop</button>
+                    <button id="download" name="submit" class="btn btn-dark rounded-0">Download</button>
+                </div>
             </form>
         </div>
     </main>
     <a id="downloadAnchorElem" style="display:none"></a>
 </body>
 <script>
+    let stops = 0;
+    const form = document.querySelector('form');
+    form.addEventListener('submit', handleSubmit);
+
     function handleSubmit(event) {
         event.preventDefault();
 
         const data = new FormData(event.target);
-
         const value = Object.fromEntries(data.entries());
+        const parsed = parseObject(value);
 
-        value.files = data.getAll("files")
-
-        console.log({ value });
-
-        downloadObjectAsJson(value, 'config')
+        downloadObjectAsJson(parsed, 'config')
     }
 
-    const form = document.querySelector('form');
-    form.addEventListener('submit', handleSubmit);
+    // TODO: Make this consistent with other functions
+    document.getElementById('add').onclick = function () {
+        stops++
+        let template = `
+            <div class="mb-3">
+                <h2>Stop ${stops+1}</h2>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="filename">Video or Image Filename: </label>
+                <input class="form-control" id="filename" name="files[${stops}][filename]" type="text" required />
+                <div id="filenameHelp" class="form-text">The filename of this video or image for this stop of
+                    the
+                    tour. Needs to include the extension (i.e. .jpg or .mp4).</div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="text">Scene Text:
+                </label>
+                <input class="form-control" id="text" name="files[${stops}][text]" type="text" />
+                <div id="textHelp" class="form-text">Text you want to appear in scene. Leave blank for no text.
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="sound">Sound Filename: </label>
+                <input class="form-control" id="sound" name="files[${stops}][sound]" type="text" />
+                <div id="soundHelp" class="form-text">The sound for this stop, could be voiceover or music just
+                    here.
+                    Leave blank if this stop is a video.</div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="type">Media Type: </label>
+                <select class="form-select" name="files[${stops}][type]" id="type">
+                    <option value="photo">photo</option>
+                    <option value="video">video</option>
+                </select>
+            </div>`;
 
+        let container = document.getElementById('files-container');
+        let div = document.createElement('div');
+        div.innerHTML = template;
+        container.appendChild(div);
+    }
 
-  function downloadObjectAsJson(exportObj, exportName){
-    let dataStr = "data:text/javascript;charset=utf-8," + encodeURIComponent("export default " + JSON.stringify(exportObj));
-    let downloadAnchorNode = document.createElement('a');
-    downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute("download", exportName + ".js");
-    document.body.appendChild(downloadAnchorNode); // required for firefox
-    downloadAnchorNode.click();
-    downloadAnchorNode.remove();
-  }
+    function downloadObjectAsJson(exportObj, exportName) {
+        let dataStr = "data:text/javascript;charset=utf-8," + encodeURIComponent("export default " + JSON.stringify(exportObj));
+        let downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", exportName + ".js");
+        document.body.appendChild(downloadAnchorNode); // required for firefox
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+    }
+
+    function parseObject(data) {
+        let parsed = {"music": data.music, "files": []};
+        const dataArray = Object.entries(data)
+        for (let i = 1; i < dataArray.length; i=i+4) {
+            let file = {
+                filename: dataArray[i][1],
+                text: dataArray[i+1][1],
+                sound: dataArray[i+2][1],
+                type: dataArray[i+3][1],
+            } 
+            parsed.files.push(file)
+        }
+        return parsed;
+    }
+
+    function removeStop() {
+        if (stops <= 0) return;
+        let container = document.getElementById("files-container");
+        container.removeChild(container.lastChild);
+        stops--;
+    }
 </script>
+
 </html>
