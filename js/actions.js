@@ -3,9 +3,12 @@ import { fadeIn } from "./shader.js";
 import { endTour } from "./endTour.js";
 let index = 0;
 let text = true;
+let stopSound;
 
 export function changeDome(direction, domes, scene) {
   const data = config.files;
+  if (stopSound) {stopSound.stop(); stopSound.dispose();};
+
   if (domes.videoDome) domes.videoDome.videoTexture.video.pause();
   index = direction === 0 ? direction : Math.max(index + direction, 0);
 
@@ -58,16 +61,18 @@ export function changeDome(direction, domes, scene) {
       }
       if(data[index].sound) {
         const soundTask = scene.tasks.find(element => element.name === "Sound"+(index+1))
-        console.log(soundTask);
-        const sound = new BABYLON.Sound(
+        stopSound = new BABYLON.Sound(
           "Sound",
           soundTask.data,
           scene,
           null,
-          {loop: true,}
+          {
+            loop: true,
+            autoplay: true
+          }
         )
-        console.log(sound);
-        sound.isPlaying = true;
+        console.log(stopSound);
+        if (!stopSound.isPlaying) stopSound.play();
       }
     }
     domes.label.text = data[index].text;

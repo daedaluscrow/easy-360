@@ -24,8 +24,8 @@ export function loadAssets(scene) {
           loop: true,
         }
       );
-      scene.tasks = tasks;
     }
+    scene.tasks = tasks;
     document.getElementById("loader").style.display = "none";
     document.getElementById("loading-text").innerText = "Ready!";
     const startButton = document.getElementsByName("start");

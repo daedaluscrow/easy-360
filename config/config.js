@@ -1,1 +1,1 @@
-export default {"music":"background.mp3","files":[{"filename":"GS__0003.jpg","text":"Library","sound":false,"type":"photo"},{"filename":"GS__0155.jpg","text":"Library","sound":"narration.mp3","type":"photo"}]}
+export default {"music":"","files":[{"filename":"GS__0004.jpg","text":"Library","sound":"","type":"photo"},{"filename":"GS__0155.jpg","text":"Drillfield","sound":"narration.mp3","type":"photo"},{"filename":"video_test.mp4","text":"Fight!","sound":"","type":"video"}]}

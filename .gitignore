@@ -1,3 +1,6 @@
 /node_modules
 /assets/*
 !/assets/.gitkeep
+
+/config/*
+!/config/.gitkeep
