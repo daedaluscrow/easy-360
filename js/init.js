@@ -12,6 +12,9 @@ createLoadingScreen();
 
 const startRenderLoop = function (engine) {
   engine.runRenderLoop(function () {
+    if (canvas.width !== canvas.clientWidth) {
+      engine.resize();
+    }
     if (sceneToRender && sceneToRender.activeCamera) {
       sceneToRender.render();
     }
